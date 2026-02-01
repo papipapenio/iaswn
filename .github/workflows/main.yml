@@ -1,0 +1,31 @@
+name: Sync cosmotheories
+on:
+  push:
+    branches:
+      - main  # The branch that HAS the source file
+    paths:
+      - 'cosmotheories/index.html'  # The specific file to watch
+
+jobs:
+  sync-file:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v3
+        with:
+          fetch-depth: 0
+
+      - name: Copy file to other branch
+        run: |
+          git config --global user.name "github-actions"
+          git config --global user.email "actions@github.com"
+          
+          # Switch to the destination branch
+          git checkout mobile
+          
+          # Grab the file from the source branch
+          git checkout main -- cosmotheories/index.html
+          
+          # Commit and push
+          git commit -m "Auto-sync file from main"
+          git push origin mobile
