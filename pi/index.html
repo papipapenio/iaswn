@@ -1,0 +1,58 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>Pi</title>
+    <style>
+        body {
+            padding: 20px;
+        }
+
+        .pi-value {
+            font-size: 2em;
+            font-weight: bold;
+            word-break: break-all;
+            font-family: monospace;
+        }
+    </style>
+    <link rel="favicon" type="image/png" scr="/p.png">
+</head>
+
+<body>
+    <div class="pi-value"></div>
+    <script>
+        // Source - https://stackoverflow.com/a/64286624
+        // Posted by trincot, modified by community. See post 'Timeline' for change history
+        // Retrieved 2026-02-08, License - CC BY-SA 4.0
+
+        function* generateDigitsOfPi() {
+            let q = 1n;
+            let r = 180n;
+            let t = 60n;
+            let i = 2n;
+            while (true) {
+                let digit = ((i * 27n - 12n) * q + r * 5n) / (t * 5n);
+                yield Number(digit);
+                let u = i * 3n;
+                u = (u + 1n) * 3n * (u + 2n);
+                r = u * 10n * (q * (i * 5n - 2n) + r - t * digit);
+                q *= 10n * i * (i++ * 2n - 1n);
+                t *= u;
+            }
+        }
+
+        // Demo
+        let iter = generateDigitsOfPi();
+
+        let output = document.querySelector("div");
+        (function displayTenNextDigits() {
+            let digits = "";
+            for (let i = 0; i < 10; i++) digits += iter.next().value;
+            output.insertAdjacentHTML("beforeend", digits);
+            scrollTo(0, document.body.scrollHeight);
+            requestAnimationFrame(displayTenNextDigits);
+        })();   
+    </script>
+</body>
+</html>
